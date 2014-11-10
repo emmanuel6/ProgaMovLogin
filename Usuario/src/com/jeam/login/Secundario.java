@@ -1,8 +1,10 @@
 package com.jeam.login;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.widget.Button;
@@ -11,18 +13,58 @@ import android.widget.Toast;
 
 public class Secundario extends ActionBarActivity{
 	
+	private Button boton;
+	private EditText destinatario, asunto, texto;
+		
+	
 	 @Override
 	    protected void onCreate(Bundle savedInstanceState) {
 	        super.onCreate(savedInstanceState);
+	        
 	        setContentView(R.layout.segundolayout);
 	        
-	        WebView myWebView = (WebView) this.findViewById(R.id.web);
-	        myWebView.loadUrl("https://login.live.com/login.srf?wa=wsignin1.0&ct=1413610345&rver=6.1.6206.0&sa=1&ntprob=-1&wp=MBI_SSL_SHARED&wreply=https:%2F%2Fmail.live.com%2F%3Fowa%3D1%26owasuffix%3Dowa%252f&id=64855&snsc=1&cbcxt=mail");
+	        boton= (Button)findViewById(R.id.button1);
+	        destinatario= (EditText)findViewById(R.id.editText1);
+	        asunto= (EditText)findViewById(R.id.editText2);
+	        texto= (EditText)findViewById(R.id.editText3);
 	        
-	        // Enable JavaScript
-	        WebSettings webSettings = myWebView.getSettings();
-	        webSettings.setJavaScriptEnabled(true);
+	       
+	        boton.setOnClickListener(new OnClickListener() {
+	        	
+
+				@Override
+				public void onClick(View arg0) {
+					// TODO Auto-generated method stub
+					
+					enviarMail();
+						
+				}
+	        	
+	        });
+
+	 }
+	        
+	 
+	    public void enviarMail(){
+	    	
+	    	Intent intent= new Intent(android.content.Intent.ACTION_SEND);
+	    	intent.setType("text/plain");
+	    	intent.putExtra(android.content.Intent.EXTRA_EMAIL, new String[]{destinatario.getText().toString()});
+	    	intent.putExtra(android.content.Intent.EXTRA_SUBJECT, asunto.getText().toString()); 
+	    	intent.putExtra(android.content.Intent.EXTRA_TEXT, texto.getText().toString());
+	    	
+	    	try{
+	    		startActivity(Intent.createChooser(intent, "Enviando correo"));
+	    		Toast.makeText(getApplicationContext(), "correo enviado!", Toast.LENGTH_SHORT).show();
+	    	   }
+	    	catch (Exception e){
+	    		e.printStackTrace();
+	    		Toast.makeText(getApplicationContext(), "correo no enviado!", Toast.LENGTH_SHORT).show();
+	    	}
+	    	
+	    	
 	    }
-	
+
+	        
 	
 }
